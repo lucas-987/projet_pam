@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 import '../component/my_button.dart';
@@ -12,10 +13,13 @@ class Connexion extends StatelessWidget {
   final passwordController = TextEditingController();
 
   // sign user in method
-  void signUserIn() {}
+
 
   @override
   Widget build(BuildContext context) {
+    void signUserIn() {
+      Navigator.pushNamed(context, '/showEvents');
+    }
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(

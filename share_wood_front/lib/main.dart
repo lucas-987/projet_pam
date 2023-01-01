@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:share_wood_front/front_pages/create_event.dart';
+import 'package:share_wood_front/front_pages/list_event.dart';
 
 import 'front_pages/app_bar.dart';
 import 'front_pages/connexion.dart';
@@ -20,7 +22,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => MyAppBar(),
+        '/': (context) => Connexion(),
+        '/showEvents': (context)=>MyAppBar(),
+        '/addEvent':(context)=>CreateEvent(),
 
       },
     );

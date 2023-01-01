@@ -6,6 +6,7 @@
 final String tableevent = "event";
 
 class Evenement {
+  int id;
   String name;
   String categorie;
   String description;
@@ -14,6 +15,7 @@ class Evenement {
 
 
   Evenement({
+    required this.id,
     required this.name,
     required this.categorie,
     required this.description,
