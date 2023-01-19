@@ -65,5 +65,12 @@ public class EventController {
         return "";
     }
 
+    @PostMapping(value = "joinevent")
+    public String joinEvent(@RequestParam(name = "sevenement", required = false) long idevent,
+                            Model model) {
 
+        Event event = eventService.addParticipantToEvent(idevent, (long)model.getAttribute("user_id"));
+        eventService.updateEvent(event.getId(), event);
+        return "";
+    }
 }

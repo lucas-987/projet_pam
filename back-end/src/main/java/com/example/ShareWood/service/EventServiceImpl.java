@@ -57,9 +57,10 @@ public class EventServiceImpl implements IEventService{
     }
 
     @Override
-    public void addParticipantToEvent(Long idUser, Long idEvent) {
+    public Event addParticipantToEvent(Long idUser, Long idEvent) {
         User user = userRepository.findById(idUser).orElseThrow(RuntimeException::new);
         Event event = eventRepository.findById(idEvent).orElseThrow(RuntimeException::new);
         event.getParticipants().add(user);
+        return event;
     }
 }
