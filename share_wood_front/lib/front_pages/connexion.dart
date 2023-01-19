@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:share_wood_front/Model/token.dart';
 import 'package:share_wood_front/front_pages/register.dart';
 
 import '../component/my_button.dart';
@@ -39,6 +40,8 @@ class _ConnexionState extends State<Connexion> {
     );
 
     final token = response.headers.values.elementAt(1);
+    Token.auth=token;
+    Token.saveToken();
     return response;
   }
   @override

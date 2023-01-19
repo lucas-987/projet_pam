@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:share_wood_front/component/app_color.dart';
 
 import '../component/navigation_drawer.dart';
+import 'list_event.dart';
 
 class MyAppBar extends StatefulWidget{
   @override
@@ -55,7 +56,10 @@ class _MyAppBarState extends State<MyAppBar> {
 
     body: TabBarView(
       children: [
-
+        ListEvent(),
+        ListEvent(),
+        ListEvent(),
+        ListEvent()
       ],
     ),
   )

@@ -1,9 +1,14 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_wood_front/component/app_color.dart';
 import 'package:share_wood_front/component/my_button.dart';
 
+import 'package:http/http.dart' as http;
+
+import '../Model/token.dart';
 class CreateEvent extends StatefulWidget{
   @override
   _CreateEventState createState()=> _CreateEventState();
@@ -13,6 +18,34 @@ class CreateEvent extends StatefulWidget{
 class _CreateEventState extends State<CreateEvent> {
   final formKey = GlobalKey<FormState>(); //key for form
   DateTime dateTime = DateTime(2023,01,01,5,30);
+
+
+  Future<http.Response> addEvent() async {
+    Token.loadToken();
+    String token = Token.auth;
+    final headers = {'Authorization': 'Bearer $token'};
+    final response = await http.post(
+      Uri.parse('http://localhost:8080/api/event'),headers: headers, body:
+    {
+      "start_date": "2023-01-19T18:23:08.097Z",
+      "end_date": "2023-01-19T18:23:08.097Z",
+      "name": "test event 1",
+      "location": "Besançon",
+      "description": "bla bla bla"
+    },
+    );
+    return response;
+  }
+
+
+  void signUserIn() async{
+    if(this.formKey.currentState!.validate()){
+      http.Response response = await addEvent();
+      if(response.statusCode==200){
+        Navigator.pushNamed(context, '/showEvents');
+      }
+    }
+  }
 
 
   @override
@@ -95,9 +128,7 @@ class _CreateEventState extends State<CreateEvent> {
   );
 
   Widget buildSubmit() => MyButton(
-
-      text: "Submit", onTap: () { final isValid = formKey.currentState!.validate();},
-
+      text: "Submit", onTap: signUserIn
 
   );
 

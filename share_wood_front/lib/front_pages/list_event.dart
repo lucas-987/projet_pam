@@ -6,8 +6,10 @@ import 'package:share_wood_front/front_pages/event_page.dart';
 import '../Model/categorie.dart';
 import '../Model/event.dart';
 import '../Model/role.dart';
+import '../Model/token.dart';
 import '../component/app_color.dart';
 
+import 'package:http/http.dart' as http;
 class ListEvent extends StatefulWidget{
 
 
@@ -60,14 +62,16 @@ class _ListEventState extends State<ListEvent>{
 
   @override
   Future refreshEvents() async{
-
+    Token.loadToken();
+    String token = Token.auth;
+    final headers = {'Authorization': 'Bearer $token'};
+    final response = await http.get(Uri.parse('http://localhost:8080/api/event'), headers: headers);
+    response;
   }
-
 
 
   @override
   void dispose(){
-
     super.dispose();
   }
 
