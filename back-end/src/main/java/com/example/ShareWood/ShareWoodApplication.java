@@ -25,12 +25,10 @@ public class ShareWoodApplication implements ApplicationRunner {
 		SpringApplication.run(ShareWoodApplication.class, args);
 	}
 
-
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		User user1 = new User(null, "user1", "user1@user1.user1", "1234",
 					"Besançon", Role.USER, new ArrayList<>(), new ArrayList<>());
-
 		Event event1 = new Event("Event1", "Event1", new Date(), new Date(), "perou");
 		event1.setCreator(user1);
 		userService.addUser(user1);

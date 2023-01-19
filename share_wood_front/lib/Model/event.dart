@@ -33,7 +33,17 @@ class Evenement {
   });
 
 
-
-
+  factory Evenement.fromJson(Map<String, dynamic> json) {
+    return Evenement(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      score: json['score'],
+      start_date: DateTime.parse(json['start_date']),
+      end_date: DateTime.parse(json['end_date']),
+      location: json['location'],
+      catego: Categorie.SPORTIF,
+      user: User.fromJson(json['user']),
+    );
+  }
 }
-

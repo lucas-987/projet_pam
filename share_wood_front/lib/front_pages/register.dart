@@ -61,7 +61,7 @@ class _RegisterState extends State<Register> {
     void signUserIn() async {
       if(this.formKey.currentState!.validate()){
         http.Response response = await signIn(new User(username: usernameController.text,
-            email: mailController.text, location: locationController.text, password: passwordController.text, role: 0));
+            email: mailController.text, location: locationController.text, password: passwordController.text, role: Role.USER));
         if(response.statusCode==200){
           Navigator.pushNamed(context, '/');
         }

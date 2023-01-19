@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:share_wood_front/Model/user.dart';
@@ -16,22 +18,12 @@ class ListEvent extends StatefulWidget{
   @override
   _ListEventState createState()=> _ListEventState();
 
-  Evenement event1 = new Evenement(
-      id: 0,
-      name: "Event1",
-      description: "la recherche des cité d'or",
-      score: 0,
-      catego: Categorie.SPORTIF,
-      start_date: DateTime.now(),
-      end_date: DateTime.now(),
-      location: "Perou",
-      user: new User( username: "Esteban", email: "Esteban@gmail.com", location: "Cité d'or", password: '', role: 0,));
 
 }
 
 class _ListEventState extends State<ListEvent>{
 
-  late List<Evenement> events=[this.widget.event1];
+  late List<Evenement> events=[];
   bool isLoading=false;
 
 
@@ -66,6 +58,10 @@ class _ListEventState extends State<ListEvent>{
     String token = Token.auth;
     final headers = {'Authorization': 'Bearer $token'};
     final response = await http.get(Uri.parse('http://localhost:8080/api/event'), headers: headers);
+    this.events.clear();
+    final list = jsonDecode(response.body);
+
+
     response;
   }
 
@@ -76,7 +72,6 @@ class _ListEventState extends State<ListEvent>{
   }
 
   void upEvent(int idEvent){
-
     setState(() {
       events.elementAt(idEvent).score++;
     });

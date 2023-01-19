@@ -18,21 +18,35 @@ class CreateEvent extends StatefulWidget{
 class _CreateEventState extends State<CreateEvent> {
   final formKey = GlobalKey<FormState>(); //key for form
   DateTime dateTime = DateTime(2023,01,01,5,30);
+  DateTime dateTimeEnd = DateTime(2023,01,01,5,30);
+  final nameController = TextEditingController();
+  final lieuController = TextEditingController();
+  final descriptionController = TextEditingController();
+
 
 
   Future<http.Response> addEvent() async {
     Token.loadToken();
     String token = Token.auth;
-    final headers = {'Authorization': 'Bearer $token'};
+
+    var formattedDate = dateTime.toUtc().toIso8601String();
+    var formattedDate2 = dateTimeEnd.toUtc().toIso8601String();
+
+
+    final headers = {'Authorization': 'Bearer $token','Content-Type': 'application/json'};
     final response = await http.post(
-      Uri.parse('http://localhost:8080/api/event'),headers: headers, body:
-    {
-      "start_date": "2023-01-19T18:23:08.097Z",
-      "end_date": "2023-01-19T18:23:08.097Z",
-      "name": "test event 1",
-      "location": "Besançon",
-      "description": "bla bla bla"
-    },
+      Uri.parse('http://localhost:8080/api/event'),
+
+
+
+    headers: headers,
+    body: jsonEncode({
+      "start_date":formattedDate,
+      "end_date": formattedDate2,
+      "name": nameController.text,
+      "location": lieuController.text
+    })
+
     );
     return response;
   }
@@ -81,13 +95,16 @@ class _CreateEventState extends State<CreateEvent> {
               
               children: [
                 SizedBox(height:16),
-                buildTextForm("EventName",checkFieldEmpty),
+                buildTextForm(nameController,"EventName",checkFieldEmpty),
                 SizedBox(height:16),
-                buildTextForm("Description",checkFieldEmpty),
+                buildTextForm(descriptionController,"Description",checkFieldEmpty),
                 SizedBox(height:16),
-                buildTextForm("Lieu",checkFieldEmpty),
+                buildTextForm(lieuController,"Lieu",checkFieldEmpty),
                 SizedBox(height:32),
-                buildEventDate(),
+
+                buildEventDate(dateTime),
+
+                buildEventDate(dateTimeEnd),
                 SizedBox(height:32),
                 buildSubmit()
               ],
@@ -105,26 +122,27 @@ class _CreateEventState extends State<CreateEvent> {
     }else return null;
   }
 
+  Widget buildTextForm(TextEditingController message,String hint,String? Function(String?) myfunction)=>Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+    child: TextFormField(
+        controller: message,
+        obscureText: false,
+        decoration: InputDecoration(
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey.shade400),
+            ),
+            fillColor: Colors.grey.shade200,
+            filled: true,
+            hintText:  hint,
+            hintStyle: TextStyle(color: Colors.grey[500])
 
-  Widget buildTextForm(String message,String? Function(String?) myfunction)=>Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: TextFormField(
-          obscureText: true,
-          decoration: InputDecoration(
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey.shade400),
-              ),
-              fillColor: Colors.grey.shade200,
-              filled: true,
-              hintText:  message,
-              hintStyle: TextStyle(color: Colors.grey[500])
+        ),
+        validator: myfunction
+    ),
 
-          ),
-          validator: myfunction
-      ),
   );
 
   Widget buildSubmit() => MyButton(
@@ -132,59 +150,62 @@ class _CreateEventState extends State<CreateEvent> {
 
   );
 
-  Widget buildEventDate()=>Row(
+  Widget buildEventDate(DateTime dateTimeSt)=>Row(
     children: [
       MyButton(
 
           onTap: () async{
-        final date =  await pickDate();
+        final date =  await pickDate(dateTimeSt);
         if (date==null)return;
         final newDateTime = DateTime(
           date.year,
           date.month,
           date.day,
-          dateTime.hour,
-          dateTime.minute,
+          dateTimeSt.hour,
+          dateTimeSt.minute,
         );
         setState(() {
-          dateTime = newDateTime;
+          dateTimeSt = newDateTime;
         });
       },
-        text: '${dateTime.year}/${dateTime.month}/${dateTime.day}',
+        text: '${dateTimeSt.year}/${dateTimeSt.month}/${dateTimeSt.day}',
       ),
       MyButton(
           onTap: () async{
-       final time = await  pickTime();
+       final time = await  pickTime(dateTimeSt);
 
        if(time==null)return;
        final newDateTime = DateTime(
-         dateTime.year,
-         dateTime.month,
-         dateTime.day,
+         dateTimeSt.year,
+         dateTimeSt.month,
+         dateTimeSt.day,
          time.hour,
          time.minute,
        );
        setState(() {
-         dateTime = newDateTime;
+         dateTimeSt = newDateTime;
        });
 
       },
-          text:'${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}'
+          text:'${dateTimeSt.hour.toString().padLeft(2,'0')}:${dateTimeSt.minute.toString().padLeft(2,'0')}'
       ),
 
     ],
   );
 
- Future<DateTime?> pickDate() => showDatePicker(
+ Future<DateTime?> pickDate(DateTime dateTimeSt) => showDatePicker(
    context: context,
-   initialDate: dateTime,
+   initialDate: dateTimeSt,
    firstDate: DateTime(1900),
    lastDate: DateTime(2100),
  );
 
-  Future<TimeOfDay?> pickTime()=>showTimePicker(
+  Future<TimeOfDay?> pickTime(DateTime dateTimeSt)=>showTimePicker(
       context: context,
-      initialTime: TimeOfDay(hour: dateTime.hour, minute: dateTime.minute)
+      initialTime: TimeOfDay(hour: dateTimeSt.hour, minute: dateTimeSt.minute)
   );
+
+
+
 
 }

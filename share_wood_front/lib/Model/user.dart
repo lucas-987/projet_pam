@@ -13,7 +13,7 @@ class User {
   String password;
   String email;
   String location;
-  int role;
+  Role role;
   User({
     required this.username,
     required this.email,
@@ -30,6 +30,18 @@ class User {
     'location': location,
     'role': role,
   };
+
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+
+        username: json['username'],
+        email: json['email'],
+        password: json['password'],
+        location: json['location'],
+        role: RoleFunc.fromString(json['role'])
+    );
+  }
 
 
 
