@@ -1,11 +1,13 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:share_wood_front/front_pages/register.dart';
 
 import '../component/my_button.dart';
 import '../component/my_textfield.dart';
 
-
+import 'package:http/http.dart' as http;
 class Connexion extends StatefulWidget {
   Connexion({super.key});
 
@@ -30,13 +32,25 @@ class _ConnexionState extends State<Connexion> {
       return'Entrer au moin 4 caractères';
     }else return null;
   }
+
+  Future<http.Response> login(String username, String password) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:8080/api/login?username=$username&password=$password'),
+    );
+
+    final token = response.headers.values.elementAt(1);
+    return response;
+  }
   @override
   Widget build(BuildContext context) {
 
 
-    void signUserIn() {
+    void signUserIn() async{
       if(this.formKey.currentState!.validate()){
-        Navigator.pushNamed(context, '/showEvents');
+        http.Response response = await login(usernameController.text,passwordController.text);
+        if(response.statusCode==200){
+          Navigator.pushNamed(context, '/showEvents');
+        }
       }
     }
     return Scaffold(
@@ -72,8 +86,8 @@ class _ConnexionState extends State<Connexion> {
               const SizedBox(height: 25),
 
               // username textfield
-              buildTextForm("UserName",checkFieldEmpty),
-              buildTextForm("Password",checkFieldEmpty),
+              buildTextForm(usernameController,'UserName',checkFieldEmpty),
+              buildTextForm(passwordController,"Password",checkFieldEmpty),
 
 
               const SizedBox(height: 10),
@@ -148,9 +162,10 @@ class _ConnexionState extends State<Connexion> {
   }
 
 
-  Widget buildTextForm(String message,String? Function(String?) myfunction)=>Padding(
+  Widget buildTextForm(TextEditingController message,String hint,String? Function(String?) myfunction)=>Padding(
     padding: const EdgeInsets.symmetric(horizontal: 25.0),
     child: TextFormField(
+      controller: message,
       obscureText: true,
       decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(
@@ -161,7 +176,7 @@ class _ConnexionState extends State<Connexion> {
           ),
           fillColor: Colors.grey.shade200,
           filled: true,
-          hintText:  message,
+          hintText:  hint,
           hintStyle: TextStyle(color: Colors.grey[500])
 
       ),

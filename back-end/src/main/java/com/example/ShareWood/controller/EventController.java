@@ -71,6 +71,4 @@ public class EventController {
             throw new RuntimeException();
         }
     }
-
-
 }

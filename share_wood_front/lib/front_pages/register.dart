@@ -1,9 +1,14 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
+import '../Model/role.dart';
+import '../Model/user.dart';
 import '../component/my_button.dart';
 import '../component/my_textfield.dart';
 
+import 'package:http/http.dart' as http;
 
 class Register extends StatefulWidget {
   Register({super.key});
@@ -21,6 +26,9 @@ class _RegisterState extends State<Register> {
   // text editing controllers
 
   final usernameController = TextEditingController();
+
+  final mailController = TextEditingController();
+  final locationController = TextEditingController();
   final passwordController = TextEditingController();
 
 
@@ -32,11 +40,31 @@ class _RegisterState extends State<Register> {
       return'Entrer au moin 4 caractères';
     }else return null;
   }
+
+
+
+  Future<http.Response> signIn(User user) async {
+    final http.Response response = await http.post(
+      Uri.parse('https://localhost:8080/api/user'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(user.toJson()),
+    );
+
+    final token = response.headers.values.elementAt(1);
+    return response;
+  }
+
   @override
   Widget build(BuildContext context) {
-    void signUserIn() {
+    void signUserIn() async {
       if(this.formKey.currentState!.validate()){
-        Navigator.pushNamed(context, '/showEvents');
+        http.Response response = await signIn(new User(username: usernameController.text,
+            email: mailController.text, location: locationController.text, password: passwordController.text, role: 0));
+        if(response.statusCode==200){
+          Navigator.pushNamed(context, '/');
+        }
       }
     }
     return Scaffold(
@@ -72,9 +100,10 @@ class _RegisterState extends State<Register> {
                   const SizedBox(height: 25),
 
                   // username textfield
-                  buildTextForm("adresse mail"),
-                  buildTextForm("Enter Password first time "),
-                  buildTextForm("Enter Password second time "),
+                  buildTextForm(usernameController,"UserName",checkFieldEmpty),
+                  buildTextForm(mailController,"adresse mail",checkFieldEmpty),
+                  buildTextForm(locationController, "Location",checkFieldEmpty),
+                  buildTextForm(passwordController,"Enter Password first time ",checkFieldEmpty),
 
                   const SizedBox(height: 10),
                   const SizedBox(height: 10),
@@ -137,10 +166,11 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
-  Widget buildTextForm(String message)=>Padding(
+  Widget buildTextForm(TextEditingController message,String hint,String? Function(String?) myfunction)=>Padding(
     padding: const EdgeInsets.symmetric(horizontal: 25.0),
     child: TextFormField(
-        obscureText: true,
+        controller: message,
+        obscureText: false,
         decoration: InputDecoration(
             enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
@@ -150,11 +180,11 @@ class _RegisterState extends State<Register> {
             ),
             fillColor: Colors.grey.shade200,
             filled: true,
-            hintText:  message,
+            hintText:  hint,
             hintStyle: TextStyle(color: Colors.grey[500])
 
         ),
-        validator: checkFieldEmpty
+        validator: myfunction
     ),
 
   );
