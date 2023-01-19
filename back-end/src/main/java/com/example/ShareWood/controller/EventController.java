@@ -17,10 +17,6 @@ import java.util.List;
 public class EventController {
     @Autowired
     private  IEventService eventService ;
-    @GetMapping
-    public List<Event> getAllEvent(){
-        return this.eventService.getAllEvent();
-    }
 
     @GetMapping
     public List<Event> getAllEventByLocation(Model model){
