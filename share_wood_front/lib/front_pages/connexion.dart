@@ -1,30 +1,53 @@
 
 import 'package:flutter/material.dart';
+import 'package:share_wood_front/front_pages/register.dart';
 
 import '../component/my_button.dart';
 import '../component/my_textfield.dart';
 
 
-class Connexion extends StatelessWidget {
+class Connexion extends StatefulWidget {
   Connexion({super.key});
 
+  @override
+  _ConnexionState createState()=> _ConnexionState();
+
+}//key for form
+
+class _ConnexionState extends State<Connexion> {
+  final formKey = GlobalKey<FormState>();
   // text editing controllers
+
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
+
   // sign user in method
 
-
+  String? checkFieldEmpty(String? fieldContent) { //<-- add String? as a return type
+    if(fieldContent==null)return'Entrer au moin 4 caractères';
+    if(fieldContent.length <4){
+      return'Entrer au moin 4 caractères';
+    }else return null;
+  }
   @override
   Widget build(BuildContext context) {
+
+
     void signUserIn() {
-      Navigator.pushNamed(context, '/showEvents');
+      if(this.formKey.currentState!.validate()){
+        Navigator.pushNamed(context, '/showEvents');
+      }
     }
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
-        child: Center(
-          child: Column(
+        child:
+        Center(
+
+          child: Form(
+          key: formKey, //
+          child:Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
@@ -49,20 +72,14 @@ class Connexion extends StatelessWidget {
               const SizedBox(height: 25),
 
               // username textfield
-              MyTextField(
-                controller: usernameController,
-                hintText: 'Username',
-                obscureText: false,
-              ),
+              buildTextForm("UserName",checkFieldEmpty),
+              buildTextForm("Password",checkFieldEmpty),
+
 
               const SizedBox(height: 10),
 
-              // password textfield
-              MyTextField(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true,
-              ),
+
+
 
               const SizedBox(height: 10),
 
@@ -85,37 +102,13 @@ class Connexion extends StatelessWidget {
               // sign in button
               MyButton(
                 onTap: signUserIn,
+                text: "Sign In",
               ),
 
               const SizedBox(height: 50),
 
               // or continue with
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text(
-                        'Or continue with',
-                        style: TextStyle(color: Colors.grey[700]),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+
 
               const SizedBox(height: 50),
 
@@ -132,19 +125,48 @@ class Connexion extends StatelessWidget {
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(width: 4),
-                  const Text(
-                    'Register now',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/register');
+                    },
+                    child: Text(
+                        'Register now',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                   ),
                 ],
               )
             ],
           ),
+        )
         ),
       ),
     );
   }
+
+
+  Widget buildTextForm(String message,String? Function(String?) myfunction)=>Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+    child: TextFormField(
+      obscureText: true,
+      decoration: InputDecoration(
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.shade400),
+          ),
+          fillColor: Colors.grey.shade200,
+          filled: true,
+          hintText:  message,
+          hintStyle: TextStyle(color: Colors.grey[500])
+
+      ),
+      validator: myfunction
+    ),
+
+  );
 }

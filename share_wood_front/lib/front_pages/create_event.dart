@@ -1,6 +1,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share_wood_front/component/app_color.dart';
+import 'package:share_wood_front/component/my_button.dart';
 
 class CreateEvent extends StatefulWidget{
   @override
@@ -30,7 +32,7 @@ class _CreateEventState extends State<CreateEvent> {
           flexibleSpace: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [Colors.red,Colors.black],
+                    colors: [AppColors.primaryColor,AppColors.secondaryColor],
                     begin: Alignment.bottomRight,
                     end: Alignment.topLeft
                 )
@@ -46,11 +48,11 @@ class _CreateEventState extends State<CreateEvent> {
               
               children: [
                 SizedBox(height:16),
-                buildEventName(),
+                buildTextForm("EventName",checkFieldEmpty),
                 SizedBox(height:16),
-                buildEventDescription(),
+                buildTextForm("Description",checkFieldEmpty),
                 SizedBox(height:16),
-                buildEventLieu(),
+                buildTextForm("Lieu",checkFieldEmpty),
                 SizedBox(height:32),
                 buildEventDate(),
                 SizedBox(height:32),
@@ -62,67 +64,48 @@ class _CreateEventState extends State<CreateEvent> {
     );
 
   }
-  Widget buildEventName()=>TextFormField(
-    decoration: InputDecoration(
-      labelText: 'Nom Evenement',
-      border: OutlineInputBorder(),
-    ),
 
-    onChanged: (value)=> setState(() {
+  String? checkFieldEmpty(String? fieldContent) { //<-- add String? as a return type
+    if(fieldContent==null)return'Entrer au moin 4 caractères';
+    if(fieldContent.length <4){
+      return'Entrer au moin 4 caractères';
+    }else return null;
+  }
 
-    }),
-    validator: (value){
-      if(value==null)return'Entrer au moin 4 caractères';
-      if(value.length <4){
-        return'Entrer au moin 4 caractères';
-      }else return null;
-    },
+
+  Widget buildTextForm(String message,String? Function(String?) myfunction)=>Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: TextFormField(
+          obscureText: true,
+          decoration: InputDecoration(
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey.shade400),
+              ),
+              fillColor: Colors.grey.shade200,
+              filled: true,
+              hintText:  message,
+              hintStyle: TextStyle(color: Colors.grey[500])
+
+          ),
+          validator: myfunction
+      ),
+  );
+
+  Widget buildSubmit() => MyButton(
+
+      text: "Submit", onTap: () { final isValid = formKey.currentState!.validate();},
 
 
   );
-  Widget buildEventDescription()=>TextFormField(
-    decoration: InputDecoration(
-      labelText: 'Description courte',
-      border: OutlineInputBorder(),
-    ),
-    onChanged: (value)=> setState(() {
-
-    }),
-    validator: (value){
-      if(value==null)return'Entrer au moin 4 caractères';
-      if(value.length <4){
-        return'Entrer au moin 4 caractères';
-      }else return null;
-    },
-  );
-  Widget buildEventLieu()=>TextFormField(
-    decoration: InputDecoration(
-      labelText: 'Lieu',
-      border: OutlineInputBorder(),
-    ),
-    onChanged: (value)=> setState(() {
-
-    }),
-    validator: (value){
-      if(value==null)return'Entrer au moin 4 caractères';
-      if(value.length <4){
-        return'Entrer au moin 4 caractères';
-      }else return null;
-    },
-  );
-
-  Widget buildSubmit() => ElevatedButton(
-      onPressed: (){
-      final isValid = formKey.currentState!.validate();
-  },
-      child: Text("Submit"));
 
   Widget buildEventDate()=>Row(
     children: [
-      ElevatedButton(
+      MyButton(
 
-
-          onPressed: () async{
+          onTap: () async{
         final date =  await pickDate();
         if (date==null)return;
         final newDateTime = DateTime(
@@ -136,9 +119,10 @@ class _CreateEventState extends State<CreateEvent> {
           dateTime = newDateTime;
         });
       },
-          child:Text('${dateTime.year}/${dateTime.month}/${dateTime.day}')
+        text: '${dateTime.year}/${dateTime.month}/${dateTime.day}',
       ),
-      ElevatedButton(onPressed: () async{
+      MyButton(
+          onTap: () async{
        final time = await  pickTime();
 
        if(time==null)return;
@@ -154,9 +138,8 @@ class _CreateEventState extends State<CreateEvent> {
        });
 
       },
-          child:Text('${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}')
+          text:'${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}'
       ),
-
 
     ],
   );

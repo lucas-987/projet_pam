@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:share_wood_front/main.dart';
+import 'package:share_wood_front/component/app_color.dart';
 
-import 'list_event.dart';
+import '../component/navigation_drawer.dart';
 
 class MyAppBar extends StatefulWidget{
   @override
@@ -11,6 +11,11 @@ class MyAppBar extends StatefulWidget{
 }
 
 class _MyAppBarState extends State<MyAppBar> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) =>DefaultTabController(
     length: 4,
@@ -31,7 +36,7 @@ class _MyAppBarState extends State<MyAppBar> {
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.red,Colors.black],
+            colors: [AppColors.primaryColor,AppColors.secondaryColor],
                 begin: Alignment.bottomRight,
               end: Alignment.topLeft
           )
@@ -50,11 +55,6 @@ class _MyAppBarState extends State<MyAppBar> {
 
     body: TabBarView(
       children: [
-        ListEvent(),
-        ListEvent(),
-        ListEvent(),
-        ListEvent(),
-
 
       ],
     ),
@@ -65,57 +65,6 @@ class _MyAppBarState extends State<MyAppBar> {
 
 }
 
-class NavigationDrawer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) => Drawer(
-
-    child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children:<Widget> [
-          buildHeader(context),
-          buildMenuItems(context),
-        ],
-      ),
-    ),
-  );
-  Widget buildHeader(BuildContext context)=>Material(
-
-    color: Colors.red,
-
-    child: InkWell(
-      onTap: (){},
-      child: Container(
-        padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top,
-            bottom: 24
-        ),
-        child: Column(
-          children: [
-            CircleAvatar(
-              radius: 52,
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            Text('Insert User_name'),
-            Text('insert_mail@mail.com')
-          ],
-        ),
-      ),
-
-    ),
-
-  );
-  Widget buildMenuItems(BuildContext context)=>Column(
-    children: [
-      ListTile(
-        leading: const Icon(Icons.home_outlined),
-        title: Text("home"),
-        onTap: (){},
-      )
-    ],
-  );
 
 
-}
+
