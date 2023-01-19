@@ -8,6 +8,5 @@ public interface IUserService {
     public List<User> getAllUsers();
     public User getUserById(Long id);
     public User addUser(User user);
-
-
+    public User getUserByUsername(String username);
 }

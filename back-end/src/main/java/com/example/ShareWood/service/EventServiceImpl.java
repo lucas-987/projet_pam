@@ -40,8 +40,9 @@ public class EventServiceImpl implements IEventService{
     }
 
     @Override
-    public Event addEvent(String name, String description, Date date_debut, Date date_fin, String location) {
-        return eventRepository.save(new Event(name, description, date_debut, date_fin, location));
+    public Event addEvent(Event event, User creator) {
+        event.setCreator(creator);
+        return eventRepository.save(event);
     }
 
     @Override
@@ -57,9 +58,11 @@ public class EventServiceImpl implements IEventService{
     }
 
     @Override
-    public void addParticipantToEvent(Long idUser, Long idEvent) {
-        User user = userRepository.findById(idUser).orElseThrow(RuntimeException::new);
+    public void addParticipantToEvent(User user, Long idEvent) {
         Event event = eventRepository.findById(idEvent).orElseThrow(RuntimeException::new);
         event.getParticipants().add(user);
+        user.getSaved_events().add(event);
+        userRepository.save(user);
+        eventRepository.save(event);
     }
 }

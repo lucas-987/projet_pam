@@ -1,5 +1,7 @@
 package com.example.ShareWood.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 
@@ -27,8 +29,10 @@ public class User {
 
     @OneToMany
     @JoinColumn(name = "creator_id")
+    @JsonIgnore()
     private List<Event> created_events;
 
     @ManyToMany
+    @JsonIgnore()
     private List<Event> saved_events = new ArrayList<>();
 }

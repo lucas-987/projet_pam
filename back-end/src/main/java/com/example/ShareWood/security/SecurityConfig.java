@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/login", "/api/user", "/h2-console/**").permitAll();
         //afin de desactiver l'authentification il suffit de commenter les 3 lignes ci dessous
-        http.authorizeRequests().antMatchers().hasRole("ADMIN");
+        //http.authorizeRequests().antMatchers().hasRole("ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
