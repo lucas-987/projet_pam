@@ -12,10 +12,21 @@ public class Event {
     private Long id;
     private String name;
     private String description;
-    private int score;
+    private int score = 0;
     private Date start_date;
     private Date end_date;
     private String location;
+
+    public Event() {
+    }
+
+    public Event(String name, String description, Date start_date, Date end_date, String location) {
+        this.name = name;
+        this.description = description;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.location = location;
+    }
 
     @ManyToOne
     @JoinColumn(name = "creator_id")

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,7 +21,12 @@ public class EventServiceImpl implements IEventService{
 
     @Override
     public List<Event> getAllEventByLocation(String location) {
-        return null;
+        return eventRepository.findByLocation(location);
+    }
+
+    @Override
+    public List<Event> getAllEventByUser(int user) {
+        return eventRepository.findByCreator(user);
     }
 
     @Override
@@ -34,8 +40,8 @@ public class EventServiceImpl implements IEventService{
     }
 
     @Override
-    public Event addEvent(Event event) {
-        return eventRepository.save(event);
+    public Event addEvent(String name, String description, Date date_debut, Date date_fin, String location) {
+        return eventRepository.save(new Event(name, description, date_debut, date_fin, location));
     }
 
     @Override
