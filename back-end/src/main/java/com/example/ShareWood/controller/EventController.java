@@ -50,6 +50,13 @@ public class EventController {
         return eventService.addEvent(event, creator);
     }
 
+    @PutMapping("/{id}/like")
+    public Event likeEvent(@PathVariable Long id) {
+        Event event = eventService.getEventById(id);
+        event.setScore(event.getScore() + 1);
+        return eventService.updateEvent(id, event);
+    }
+
     @GetMapping("/{eventId}/joinevent")
     public void joinEvent(Principal principal, @PathVariable Long eventId) {
         User loggedUser = userService.getUserByUsername(principal.getName());
