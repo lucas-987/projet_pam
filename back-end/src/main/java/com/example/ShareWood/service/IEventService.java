@@ -13,5 +13,5 @@ public interface IEventService {
     public Event addEvent(String name, String description, Date date_debut, Date date_fin, String location);
     public Event updateEvent(Long id,Event event);
     public void deleteEvent(Long id);
-    public void addParticipantToEvent(Long idUser, Long idEvent);
+    public Event addParticipantToEvent(Long idUser, Long idEvent);
 }
