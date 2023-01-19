@@ -5,6 +5,7 @@ import 'package:share_wood_front/Model/user.dart';
 import 'package:share_wood_front/front_pages/event_page.dart';
 import '../Model/categorie.dart';
 import '../Model/event.dart';
+import '../Model/role.dart';
 import '../component/app_color.dart';
 
 class ListEvent extends StatefulWidget{
@@ -22,46 +23,13 @@ class ListEvent extends StatefulWidget{
       start_date: DateTime.now(),
       end_date: DateTime.now(),
       location: "Perou",
-      user: new User(id: 0, username: "Esteban", email: "Esteban@gmail.com", location: "Cité d'or"));
-  Evenement event2= new Evenement(
-      id: 0,
-      name: "Event2",
-      description: "la recherche des cité d'or",
-      score: 0,
-      catego: Categorie.SPORTIF,
-      start_date: DateTime.now(),
-      end_date: DateTime.now(),
-      location: "Perou",
-      user: new User(id: 0, username: "Esteban", email: "Esteban@gmail.com", location: "Cité d'or"));
-
-  Evenement event3 = new Evenement(
-      id: 0,
-      name: "Event3",
-      description: "la recherche des cité d'or",
-      score: 0,
-      catego: Categorie.SPORTIF,
-      start_date: DateTime.now(),
-      end_date: DateTime.now(),
-      location: "Perou",
-      user: new User(id: 0, username: "Esteban", email: "Esteban@gmail.com", location: "Cité d'or"));
-
-  Evenement event4 =new Evenement(
-      id: 0,
-      name: "Event4",
-      description: "la recherche des cité d'or",
-      score: 0,
-      catego: Categorie.SPORTIF,
-      start_date: DateTime.now(),
-      end_date: DateTime.now(),
-      location: "Perou",
-      user: new User(id: 0, username: "Esteban", email: "Esteban@gmail.com", location: "Cité d'or"));
-
+      user: new User( username: "Esteban", email: "Esteban@gmail.com", location: "Cité d'or", password: '', role: 0,));
 
 }
 
 class _ListEventState extends State<ListEvent>{
 
-  late List<Evenement> events=[this.widget.event1,this.widget.event2,this.widget.event3,this.widget.event4];
+  late List<Evenement> events=[this.widget.event1];
   bool isLoading=false;
 
 
