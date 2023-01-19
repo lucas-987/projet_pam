@@ -16,7 +16,6 @@ public class Event {
     private Date start_date;
     private Date end_date;
     private String location;
-    private Event event;
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
@@ -82,13 +81,6 @@ public class Event {
         this.location = location;
     }
 
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
 
     public User getCreator() {
         return creator;

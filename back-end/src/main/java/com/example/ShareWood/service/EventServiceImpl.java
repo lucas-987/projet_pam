@@ -24,6 +24,11 @@ public class EventServiceImpl implements IEventService{
     }
 
     @Override
+    public List<Event> getAllEvent() {
+        return eventRepository.findAll();
+    }
+
+    @Override
     public Event getEventById(Long id) {
         return eventRepository.findById(id).orElseThrow(RuntimeException::new);
     }
