@@ -13,7 +13,7 @@ class User {
   String password;
   String email;
   String location;
-  Role role;
+  String role;
   User({
     required this.username,
     required this.email,
@@ -39,7 +39,7 @@ class User {
         email: json['email'],
         password: json['password'],
         location: json['location'],
-        role: RoleFunc.fromString(json['role'])
+        role: json['role']
     );
   }
 

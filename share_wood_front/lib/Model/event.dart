@@ -18,7 +18,8 @@ class Evenement {
   DateTime start_date;
   DateTime end_date;
   String location;
-  User user;
+  User creator;
+ late List<User> participants =[];
 
   Evenement({
     required this.id,
@@ -29,7 +30,7 @@ class Evenement {
     required this.start_date,
     required this.end_date,
     required this.location,
-    required this.user
+    required this.creator,
   });
 
 
@@ -43,7 +44,8 @@ class Evenement {
       end_date: DateTime.parse(json['end_date']),
       location: json['location'],
       catego: Categorie.SPORTIF,
-      user: User.fromJson(json['user']),
+      creator:User.fromJson(Map.from(json['creator']))
+
     );
   }
 }

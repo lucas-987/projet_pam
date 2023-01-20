@@ -56,6 +56,12 @@ public class EventController {
         event.setScore(event.getScore() + 1);
         return eventService.updateEvent(id, event);
     }
+    @PutMapping("/{id}/unlike")
+    public Event unlikeEvent(@PathVariable Long id) {
+        Event event = eventService.getEventById(id);
+        event.setScore(event.getScore() -1);
+        return eventService.updateEvent(id, event);
+    }
 
     @GetMapping("/{eventId}/joinevent")
     public void joinEvent(Principal principal, @PathVariable Long eventId) {
@@ -67,7 +73,6 @@ public class EventController {
     @DeleteMapping("/{id}")
     public void deleteEvent(Principal principal, @PathVariable Long id) {
         User loggedUser = userService.getUserByUsername(principal.getName());
-
         Event event = eventService.getEventById(id);
         User owner = event.getCreator();
 

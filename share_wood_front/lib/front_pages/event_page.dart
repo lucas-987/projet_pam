@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:share_wood_front/Model/event.dart';
 
+import '../Model/token.dart';
+
+import 'package:http/http.dart' as http;
 class EventPage extends StatefulWidget {
   Evenement event;
 
@@ -36,9 +39,27 @@ class _EventPageState extends State<EventPage> {
                           fontWeight: FontWeight.bold))),
               Center(
                 child: Container(
-                  margin: EdgeInsets.only(top: 200),
+                  margin: EdgeInsets.only(top: 50),
                   color: Colors.transparent,
-                  child: Text(widget.event.name,
+                  child: Text(widget.event.description,
+                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                ),
+
+              ),
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 50),
+                  color: Colors.transparent,
+                  child: Text(widget.event.location,
+                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                ),
+
+              ),
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 50),
+                  color: Colors.transparent,
+                  child: Text("Participants : " +widget.event.participants.map((user) => user.username).join(', '),
                       style: TextStyle(color: Colors.white, fontSize: 20)),
                 ),
 
@@ -67,7 +88,17 @@ class _EventPageState extends State<EventPage> {
                       style: TextStyle(color: Colors.white, fontSize: 20)),
                 ),
               ),
-              ElevatedButton(onPressed: (){}, child: Text("Rejoindre"))
+              ElevatedButton(onPressed: () async {
+                Token.loadToken();
+              String token = Token.auth;
+              int idEvent = this.widget.event.id;
+              final response = await http.get(
+                  Uri.parse('http://localhost:8080/api/event/$idEvent/joinevent'),headers: {'Authorization': 'Bearer $token','Content-Type': 'application/json'}
+              );
+              if(response.statusCode==200){
+                Navigator.pushNamed(context, '/showEvents');
+              }
+              }, child: Text("Rejoindre"))
             ],
           ),
         ],

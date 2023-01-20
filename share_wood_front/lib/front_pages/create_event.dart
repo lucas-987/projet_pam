@@ -44,7 +44,8 @@ class _CreateEventState extends State<CreateEvent> {
       "start_date":formattedDate,
       "end_date": formattedDate2,
       "name": nameController.text,
-      "location": lieuController.text
+      "location": lieuController.text,
+      "description": descriptionController.text,
     })
 
     );

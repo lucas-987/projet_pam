@@ -47,19 +47,19 @@ class _MyAppBarState extends State<MyAppBar> {
       bottom: TabBar(
         tabs: [
           Tab(text: "Recent",),
-          Tab(text: "Commenté",),
           Tab(text:"Populaires"),
-          Tab(text: "Privé",)
+          Tab(text: "Privé",),
+          Tab(text: "Proche",)
         ],
       ),
     ),
 
     body: TabBarView(
       children: [
-        ListEvent(),
-        ListEvent(),
-        ListEvent(),
-        ListEvent()
+        ListEvent(version: 0,),
+        ListEvent(version: 1,),
+        ListEvent(version: 2,),
+        ListEvent(version: 3,),
       ],
     ),
   )

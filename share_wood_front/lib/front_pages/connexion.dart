@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:share_wood_front/Model/token.dart';
 import 'package:share_wood_front/front_pages/register.dart';
 
+import '../Model/Actual.dart';
 import '../component/my_button.dart';
 import '../component/my_textfield.dart';
 
@@ -38,10 +39,22 @@ class _ConnexionState extends State<Connexion> {
     final response = await http.post(
       Uri.parse('http://localhost:8080/api/login?username=$username&password=$password'),
     );
-
     final token = response.headers.values.elementAt(1);
+    final jsonMap = response.body;
     Token.auth=token;
     Token.saveToken();
+    final headers = {'Authorization': 'Bearer $token'};
+    final response2 = await http.get(Uri.parse('http://localhost:8080/api/user?name=$username'), headers: headers);
+
+
+    List<dynamic> jsonMap2 = json.decode(response2.body);
+    jsonMap2.forEach((element) {
+      Map<String,dynamic> map = Map.from(element);
+      Actual.id = map["id"];
+      Actual.name = map["username"];
+      Actual.mail = map["email"];
+      Actual.location = map["location"];
+    });
     return response;
   }
   @override

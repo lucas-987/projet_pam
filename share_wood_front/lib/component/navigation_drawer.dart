@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:share_wood_front/Model/Actual.dart';
 
 import 'app_color.dart';
 
@@ -42,8 +43,8 @@ class NavigationDrawer extends StatelessWidget {
                 SizedBox(
                   height: 12,
                 ),
-                Text('Insert User_name'),
-                Text('insert_mail@mail.com')
+                Text(Actual.name),
+                Text(Actual.mail)
               ],
             ),
           ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:share_wood_front/Model/Actual.dart';
 import 'package:share_wood_front/Model/user.dart';
 import 'package:share_wood_front/front_pages/event_page.dart';
 import '../Model/categorie.dart';
@@ -13,6 +14,9 @@ import '../component/app_color.dart';
 
 import 'package:http/http.dart' as http;
 class ListEvent extends StatefulWidget{
+   int version=0;
+
+   ListEvent({super.key, required this.version});
 
 
   @override
@@ -58,11 +62,33 @@ class _ListEventState extends State<ListEvent>{
     String token = Token.auth;
     final headers = {'Authorization': 'Bearer $token'};
     final response = await http.get(Uri.parse('http://localhost:8080/api/event'), headers: headers);
+
     this.events.clear();
-    final list = jsonDecode(response.body);
+    List<dynamic> jsonMap = json.decode(response.body);
+
+    setState(() {
+      jsonMap.forEach((element) {
+        Map<String,dynamic> map = Map.from(element);
+        Evenement e1 = Evenement.fromJson(map);
+        List<dynamic> participant = map["participants"];
+        participant.forEach((participant) {
+          Map<String,dynamic> map2 = Map.from(participant);
+          e1.participants.add(User.fromJson(map2));
+        });
+        events.add(e1);
+      });
+      if(this.widget.version==0){
+        events.sort((a, b) => a.start_date.compareTo(b.start_date));
+      }else if(this.widget.version==1){
+        events.sort((a, b) => a.score.compareTo(b.score));
+      }else if(this.widget.version==2){
+        events.removeWhere((event) => event.creator.username != Actual.name);
+      }else if(this.widget.version==3){
+        events.removeWhere((event) => event.location != Actual.location);
+      }
+    });
 
 
-    response;
   }
 
 
@@ -71,17 +97,28 @@ class _ListEventState extends State<ListEvent>{
     super.dispose();
   }
 
-  void upEvent(int idEvent){
+  Future<void> upEvent(int idEvent) async {
+    Token.loadToken();
+    String token = Token.auth;
     setState(() {
-      events.elementAt(idEvent).score++;
+      events.firstWhere((element) => element.id==idEvent).score++;
     });
+    final response = await http.put(
+      Uri.parse('http://localhost:8080/api/event/$idEvent/like'),headers: {'Authorization': 'Bearer $token','Content-Type': 'application/json'}
+    );
+    response;
   }
 
-  void downEvent(int idEvent){
-
+  Future<void> downEvent(int idEvent) async {
+    Token.loadToken();
+    String token = Token.auth;
     setState(() {
-      events.elementAt(idEvent).score--;
+      events.firstWhere((element) => element.id==idEvent).score--;
     });
+    final response = await http.put(
+      Uri.parse('http://localhost:8080/api/event/$idEvent/unlike'),headers: {'Authorization': 'Bearer $token','Content-Type': 'application/json'}
+    );
+    response;
   }
 
 

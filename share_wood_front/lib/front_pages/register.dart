@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../Model/role.dart';
+import '../Model/token.dart';
 import '../Model/user.dart';
 import '../component/my_button.dart';
 import '../component/my_textfield.dart';
@@ -44,15 +45,25 @@ class _RegisterState extends State<Register> {
 
 
   Future<http.Response> signIn(User user) async {
+    Token.loadToken();
+    String token = Token.auth;
+
+
+    final headers = {'Authorization': 'Bearer $token','Content-Type': 'application/json'};
     final http.Response response = await http.post(
+
       Uri.parse('https://localhost:8080/api/user'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(user.toJson()),
+      headers: headers,
+
+      body: jsonEncode({
+        "username": usernameController.text,
+        "email": mailController.text,
+        "password": passwordController.text,
+        "location": locationController.text,
+        "role": 0
+      }),
     );
 
-    final token = response.headers.values.elementAt(1);
     return response;
   }
 
@@ -61,7 +72,7 @@ class _RegisterState extends State<Register> {
     void signUserIn() async {
       if(this.formKey.currentState!.validate()){
         http.Response response = await signIn(new User(username: usernameController.text,
-            email: mailController.text, location: locationController.text, password: passwordController.text, role: Role.USER));
+            email: mailController.text, location: locationController.text, password: passwordController.text, role: "0"));
         if(response.statusCode==200){
           Navigator.pushNamed(context, '/');
         }
